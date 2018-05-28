@@ -95,7 +95,7 @@ class SearchVolunteer extends React.Component {
 
     handleSubmit = (event) => {
         event.preventDefault()
-        this.searchVolunteersHandler()
+        this.searchVolunteersHandler(this.state.searchQuery)
     }
 
     searchVolunteersHandler = (searchQuery) => {
@@ -145,19 +145,24 @@ class SearchVolunteer extends React.Component {
         }
     }
 
+    displaySearchTextFieldWithButton = () => {
+        return (
+            <div className="w-full">
+                <div className="wrap-search-txt section p-r-110">
+                    <TextField fullWidth type="text" name="searchText" value={this.state.searchQuery.searchText} floatingLabelText="Search" onChange={(e) => this.handleField('searchText', e)} />
+                </div>
+                <div className="search-btn-container m-t-27 section">
+                    <button onClick={e => this.handleSubmit(e)} className="btn btn-form">Search</button>
+                </div>
+            </div>
+        )
+    }
     render() {
         return (
             <Paper>
                 <div className="search-panel-box p-l-50 p-r-50 p-t-22">
                     <form className="flex-sb flex-w">
-                        <div className="w-full">
-                            <div className="wrap-search-txt section p-r-110">
-                                <TextField fullWidth type="text" name="searchText" value={this.state.searchQuery.searchText} floatingLabelText="Search" onChange={(e) => this.handleField('searchText', e)} />
-                            </div>
-                            <div className="search-btn-container m-t-27 section">
-                                <button onClick={e => this.handleSubmit(e)} className="btn btn-form">Search</button>
-                            </div>
-                        </div>
+                        {true ? this.displaySearchTextFieldWithButton(): null}
                         <div className="w-full">
                             <div className="wrap-country-txt section p-r-110">
                                 <CountryDropdown
