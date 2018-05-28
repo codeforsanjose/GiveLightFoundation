@@ -101,15 +101,18 @@ class SearchVolunteer extends React.Component {
     searchVolunteersHandler = (searchQuery) => {
         this.showLoadingPanel();
         searchVolunteers(searchQuery).then( response => {
-                this.setState({
-                    ...this.state,
-                    searchQuery: {
-                        ...searchQuery
-                    },
-                    searchResult: response
+            this.setState({
+                ...this.state,
+                searchQuery: {
+                    ...searchQuery
+                },
+                searchResult: response
             });
             this.hideLoadingPanel();
-        });
+        }).catch(error => {
+            alert(error)
+            window.location.href = '/login'
+        })
     }
 
     showLoadingPanel = () => {

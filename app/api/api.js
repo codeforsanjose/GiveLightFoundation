@@ -43,7 +43,6 @@ const registerUser = (newUser) => {
         ...newUser
     }
     let data = cleanupData(uploadData)
-    console.log('register user in apijs: ', data)
     makeRequest(data, 'POST', '/api/user').then(response => {
         if (response.status == 422) {
             window.alert('Email ID already exist. Try Login')
@@ -135,9 +134,12 @@ const smsVolunteers = (volunteers, text) => {
 const searchVolunteers = (searchQuery) => {
     return new Promise((resolve, reject) => {
         return makeRequest(searchQuery, 'POST', '/api/users/search').then(response => {
+            if (response.status === 403) {
+                return reject('User logged out please log back in')    
+            }
             return resolve(response.json())
         }).catch(error => {
-            console.log(error)
+            console.log('users search error', error)
             return reject(error)
         })
     })
