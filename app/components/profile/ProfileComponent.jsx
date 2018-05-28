@@ -123,7 +123,7 @@ class ProfileComponent extends React.Component {
                 <Paper>
                     <div className="p-b-33">
                         <div className="profile-edit-panel-box p-l-30 p-r-30 p-t-10 p-b-9">
-                            <ProfileFormComponent user={this.state.user} submitHandle={this.updateUser} cancelHandle={this.closeProfileEditView} submitLabel="Save" />
+                            <ProfileFormComponent formType={'edit'} user={this.state.user} submitHandle={this.updateUser} cancelHandle={this.closeProfileEditView} submitLabel="Save" />
                         </div>
                     </div>
                 </Paper>

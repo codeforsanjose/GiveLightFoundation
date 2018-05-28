@@ -21,8 +21,7 @@ class ProfileFormComponent extends React.Component {
     }
 
     initStateFromProps = (props) => {
-        const checkInter = interests.map(interest => (
-            {
+        const checkInter = interests.map(interest => ({
                 interest: interest,
                 checked: props.user && props.user.interests && props.user.interests.includes(interest)
             })
@@ -106,12 +105,14 @@ class ProfileFormComponent extends React.Component {
     }
 
     validateState = () => {
-        let errors = {};
+        let errors = {
+        }
+
         if (this.state.name.length == 0) {
-            errors.name = 'Please enter your name.';
+            errors.name = 'Please enter your name.'
         }
         if (!isValidEmail(this.state.email)) {
-            errors.email = 'Please enter a valid email.';
+            errors.email = 'Please enter a valid email.'
         }
         if (this.state.phone.length < 10) {
             errors.number = 'Please enter a valid phone number with country code.'
@@ -122,17 +123,30 @@ class ProfileFormComponent extends React.Component {
         if (!this.state.region) {
             errors.region = 'Please select a region.'
         }
+        // if (this.state.passphrase.length < 10) {
+        //     errors.passphrase += 'Invalid Passphrase.'
+        // }
+        if (!this.state.passphrase && !this.state.retypePassphrase && this.state.passphrase !== this.state.retypePassphrase) {
+            errors.passphrase += 'Passphrases do not match.'
+            errors.retypePassphrase = 'Passphrases do not match.'
+        }
         return errors
+    }
+
+    displayPassphraseFields = () => {
+        return (
+            <div>
+                <div><TextField type="password" name="passphrase" value={this.state.passphrase} floatingLabelText="Passphrase 10+ characters" errorText={this.state.errors.passphrase} onChange={(e) => this.handleField('passphrase', e)} /></div>
+                <div><TextField type="password" name="retypePassphrase" value={this.state.retypePassphrase} floatingLabelText="Retype Passphrase" errorText={this.state.errors.passphrase} onChange={(e) => this.handleField('retypePassphrase', e)} /></div>
+            </div>
+        )
     }
 
     handleSubmit(e) {
         e.preventDefault()
         let errors = this.validateState()
-        this.setState({
-            ...this.state,
-            errors: errors
-        });
-
+        
+        console.log("handle submit called in form shit errors are: ", errors)
         if (Object.keys(errors).length == 0) {
             var user = this.state
             delete user.errors
@@ -140,6 +154,10 @@ class ProfileFormComponent extends React.Component {
             delete user.skillsInput
             this.props.submitHandle(user);
         }
+        else {
+            window.alert(errors)
+        }
+        
     }
 
     render() {
@@ -149,6 +167,9 @@ class ProfileFormComponent extends React.Component {
                     <div className="checkBoxStyle"><TextField type="text" name="name" value={this.state.name} floatingLabelText="Name" errorText={this.state.errors.name} onChange={(e) => this.handleField('name', e)} /></div>
                     <div><TextField type="text" name="email" value={this.state.email} floatingLabelText="Email" errorText={this.state.errors.email} onChange={(e) => this.handleField('email', e)} /></div>
                     <div><TextField type="number" floatingLabelText="Phone 15558971234" name="phone" value={this.state.phone} errorText={this.state.errors.number} onChange={(e) => this.handleField('phone', e)} /></div>
+                    
+                    {this.props.formType === 'signup' ? this.displayPassphraseFields(): null}
+                    
                     <div className="countryRegionContainer">
                         <CountryDropdown
                             value={this.state.country}

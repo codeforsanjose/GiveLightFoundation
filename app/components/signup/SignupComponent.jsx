@@ -31,14 +31,8 @@ class SignupComponent extends React.Component {
 
     createUser = (user) => {
         delete user.checkboxInterests
-        var response = registerUser(user);
-        //TODO: Register user should accept success or error function that can allow us to capture error.
-        // console.log(response);
-        // if (response.error) {
-        //     this.setState({
-        //         error: response.error,
-        //     });
-        // }
+        console.log("register this user", user)
+        registerUser(user)
     }
 
     renderError = () => {
@@ -58,7 +52,7 @@ class SignupComponent extends React.Component {
                             </a>
                         </div>
                         {this.renderError()}
-                        <ProfileFormComponent submitHandle={this.createUser} submitLabel="Sign Up"/>
+                        <ProfileFormComponent formType={'signup'} submitHandle={this.createUser} submitLabel="Sign Up"/>
                         <div className="w-full text-center">
                             <span className="login-txt2 p-r-5">Already a volunteer?</span>
                             <Link className="login-sign-up login-txt2 bo1" to="/login">Sign in</Link>

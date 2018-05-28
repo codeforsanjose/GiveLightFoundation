@@ -43,7 +43,7 @@ const registerUser = (newUser) => {
         ...newUser
     }
     let data = cleanupData(uploadData)
-
+    console.log('register user in apijs: ', data)
     makeRequest(data, 'POST', '/api/user').then(response => {
         if (response.status == 422) {
             window.alert('Email ID already exist. Try Login')

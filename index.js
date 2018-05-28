@@ -11,6 +11,7 @@ const bodyParser = require('body-parser')
 const session = require('express-session')
 const errorHandler = require('errorhandler')
 const cookieParser = require('cookie-parser')
+const bcrypt = require('bcrypt')
 
 const app = express()
 const db = require('./lib/db')
@@ -151,14 +152,18 @@ app.post('/api/user', (req, res) => {
     ])
     newUser.isAdmin = false
     newUser.approvedBy = ''
-    db.insertOne('user', newUser).then(result => {
-        email.notifyAdmin(newUser)
-        email.notifyUser(newUser)
-        return res.status(202).json(result)
-    }).catch(error => {
-        console.log(error)
-        return res.status(422).json(error)
+    bcrypt.hash(newUser.passphrase, 10, (err, hash) => {
+        newUser.passphrase = hash
+        db.insertOne('user', newUser).then(result => {
+            email.notifyAdmin(newUser)
+            email.notifyNewUser(newUser)
+            return res.status(202).json(result)
+        }).catch(error => {
+            console.log(error)
+            return res.status(422).json(error)
+        })
     })
+    
 })
 
 app.post('/api/admin/user/makeAdmin', (req, res) => {
