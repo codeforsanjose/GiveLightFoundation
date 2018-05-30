@@ -52,4 +52,4 @@ build
 .idea
 
 app/bundle
-config/projectInfoData.js
+config/projectInfoData.json
