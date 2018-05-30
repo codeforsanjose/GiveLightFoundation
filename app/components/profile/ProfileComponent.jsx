@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { getUser, updateUser } from '../../api/api'
 import Paper from 'material-ui/Paper';
-import avatarIcon from '../../../images/avatar.png';
 import EmailIcon from 'material-ui/svg-icons/communication/email'
 import CallIcon from 'material-ui/svg-icons/communication/call'
 import MapIcon from 'material-ui/svg-icons/maps/map'
@@ -136,7 +135,6 @@ class ProfileComponent extends React.Component {
                             {this.renderError()}
                             {this.state.user._id &&
                                 <div className="p-t-70">
-                                    <img src={avatarIcon} className="profile-img" />
                                     <div className="div-center profile-volunteer-name">{this.state.user.name}
                                         <IconButton color="primary" tooltip="Edit" tooltipPosition="bottom-right" onClick={(event) => this.showProfileEditView()}>
                                             <EditIcon color={blue300} />
