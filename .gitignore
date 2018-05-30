@@ -2,7 +2,6 @@
 logs
 *.log
 npm-debug.log*
-config/projectInfoData.js
 
 .*.swp
 
@@ -53,4 +52,4 @@ build
 .idea
 
 app/bundle
-config/secret.json
+config/projectInfoData.js
