@@ -125,10 +125,10 @@ class ProfileFormComponent extends React.Component {
         if (!this.state.region) {
             errors.region = 'Please select a region.'
         }
-        if (this.state.passphrase.length < 10) {
+        if (this.props.formType !== 'edit' && this.state.passphrase.length < 10) {
             errors.passphrase += 'Invalid Passphrase.'
         }
-        if (!this.state.passphrase && !this.state.retypePassphrase && this.state.passphrase !== this.state.retypePassphrase) {
+        if (this.props.formType !== 'edit' && !this.state.passphrase && !this.state.retypePassphrase && this.state.passphrase !== this.state.retypePassphrase) {
             errors.passphrase += 'Passphrases do not match.'
             errors.retypePassphrase = 'Passphrases do not match.'
         }
@@ -147,13 +147,12 @@ class ProfileFormComponent extends React.Component {
     handleSubmit(e) {
         e.preventDefault()
         let errors = this.validateState()
-        
         if (Object.keys(errors).length === 0) {
             var user = this.state
             delete user.errors
             delete user.checkboxInterests
             delete user.skillsInput
-            this.props.submitHandle(user);
+            this.props.submitHandle(user)
         }
         else {
             this.setState({
@@ -161,12 +160,11 @@ class ProfileFormComponent extends React.Component {
                 errors: errors
             })
         }
-        
     }
 
     render() {
         return (
-            <form onSubmit={e => this.onSubmit(e)} className="flex-sb flex-w">
+            <form className="flex-sb flex-w">
                 <div className="section">
                     <div>
                         <TextField type="text" name="name" value={this.state.name} floatingLabelText="Name" errorText={this.state.errors.name} onChange={(e) => this.handleField('name', e)} />

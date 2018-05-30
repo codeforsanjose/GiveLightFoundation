@@ -94,14 +94,13 @@ class ProfileComponent extends React.Component {
 
     renderError = () => {
         if (this.state.error) {
-            return <div className="profile-get-error">{this.state.error}</div>;
+            return <div className="profile-get-error">{this.state.error}</div>
         }
     }
 
     updateUser = (user) => {
         user._id = this.state.id
         updateUser(user).then(response => {
-            console.log('Post update', response);
             this.setState({
                 ...this.state,
                 user: response,
