@@ -27,11 +27,13 @@ class ProfileFormComponent extends React.Component {
             })
         )
         this.state = {
-            name: props.user && props.user.name,
+            name: props.user && props.user.name || '',
             email: props.user && props.user.email,
             country: props.user && props.user.country,
             region: props.user && props.user.region,
-            phone: props.user && props.user.phone,
+            phone: props.user && props.user.phone || '',
+            passphrase: '',
+            retypePassphrase: '',
             interests: props.user && props.user.interests,
             skills: props.user && props.user.skills,
             skillsInput: props.user && props.user.skills && props.user.skills.toString(),
@@ -108,7 +110,7 @@ class ProfileFormComponent extends React.Component {
         let errors = {
         }
 
-        if (this.state.name.length == 0) {
+        if (this.state.name.length === 0) {
             errors.name = 'Please enter your name.'
         }
         if (!isValidEmail(this.state.email)) {
@@ -123,9 +125,9 @@ class ProfileFormComponent extends React.Component {
         if (!this.state.region) {
             errors.region = 'Please select a region.'
         }
-        // if (this.state.passphrase.length < 10) {
-        //     errors.passphrase += 'Invalid Passphrase.'
-        // }
+        if (this.state.passphrase.length < 10) {
+            errors.passphrase += 'Invalid Passphrase.'
+        }
         if (!this.state.passphrase && !this.state.retypePassphrase && this.state.passphrase !== this.state.retypePassphrase) {
             errors.passphrase += 'Passphrases do not match.'
             errors.retypePassphrase = 'Passphrases do not match.'
@@ -146,8 +148,7 @@ class ProfileFormComponent extends React.Component {
         e.preventDefault()
         let errors = this.validateState()
         
-        console.log("handle submit called in form shit errors are: ", errors)
-        if (Object.keys(errors).length == 0) {
+        if (Object.keys(errors).length === 0) {
             var user = this.state
             delete user.errors
             delete user.checkboxInterests
@@ -155,7 +156,10 @@ class ProfileFormComponent extends React.Component {
             this.props.submitHandle(user);
         }
         else {
-            window.alert(errors)
+            this.setState({
+                ...this.state,
+                errors: errors
+            })
         }
         
     }
@@ -164,13 +168,20 @@ class ProfileFormComponent extends React.Component {
         return (
             <form onSubmit={e => this.onSubmit(e)} className="flex-sb flex-w">
                 <div className="section">
-                    <div className="checkBoxStyle"><TextField type="text" name="name" value={this.state.name} floatingLabelText="Name" errorText={this.state.errors.name} onChange={(e) => this.handleField('name', e)} /></div>
-                    <div><TextField type="text" name="email" value={this.state.email} floatingLabelText="Email" errorText={this.state.errors.email} onChange={(e) => this.handleField('email', e)} /></div>
-                    <div><TextField type="number" floatingLabelText="Phone 15558971234" name="phone" value={this.state.phone} errorText={this.state.errors.number} onChange={(e) => this.handleField('phone', e)} /></div>
+                    <div>
+                        <TextField type="text" name="name" value={this.state.name} floatingLabelText="Name" errorText={this.state.errors.name} onChange={(e) => this.handleField('name', e)} />
+                    </div>
+                    <div>
+                        <TextField type="text" name="email" value={this.state.email} floatingLabelText="Email" errorText={this.state.errors.email} onChange={(e) => this.handleField('email', e)} />
+                    </div>
+                    <div>
+                        <TextField type="number" floatingLabelText="Phone 15558971234" name="phone" value={this.state.phone} errorText={this.state.errors.number} onChange={(e) => this.handleField('phone', e)} />
+                    </div>
                     
                     {this.props.formType === 'signup' ? this.displayPassphraseFields(): null}
                     
                     <div className="countryRegionContainer">
+                        {this.state.errors.country ? <div className="errorMsg">{this.state.errors.country}</div>: ''}
                         <CountryDropdown
                             value={this.state.country}
                             errorText={this.state.errors.country}
@@ -178,6 +189,7 @@ class ProfileFormComponent extends React.Component {
                         />
                     </div>
                     <div className="countryRegionContainer">
+                        {this.state.errors.region ? <div className="errorMsg">{this.state.errors.country}</div>: ''}
                         <RegionDropdown
                             country={this.state.country}
                             value={this.state.region}
