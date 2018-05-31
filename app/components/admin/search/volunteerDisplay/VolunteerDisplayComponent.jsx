@@ -5,7 +5,6 @@ import MapIcon from 'material-ui/svg-icons/maps/map'
 import Checkbox from 'material-ui/Checkbox'
 import TextTruncate from 'react-ellipsis-text';
 require('./VolunteerDisplayComponent.css');
-import avatarIcon from '../../../../../images/avatar.png';
 
 
 class VolunteerDisplayComponent extends React.Component {
@@ -32,7 +31,7 @@ class VolunteerDisplayComponent extends React.Component {
                         onCheck={(e) => this.props.handleVolunteerSelection(e, this.props.volunteer.index)}
                     />
                 </div>
-                <img src={avatarIcon} className="volunteerIcon" />
+                <div className="volunteerIcon" ></div>
                 <div className="volunteerInfo">
                     <div className="volunteerName p-l-5">{this.props.volunteer.name}</div>
                     <div className="volunteerData m-b-35 p-l-5">
