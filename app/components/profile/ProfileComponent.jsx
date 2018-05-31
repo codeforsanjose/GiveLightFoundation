@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { getUser, updateUser } from '../../api/api'
 import Paper from 'material-ui/Paper';
-import avatarIcon from '../../../images/avatar.png';
 import EmailIcon from 'material-ui/svg-icons/communication/email'
 import CallIcon from 'material-ui/svg-icons/communication/call'
 import MapIcon from 'material-ui/svg-icons/maps/map'
