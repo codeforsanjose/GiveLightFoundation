@@ -3,8 +3,29 @@ const DefaultHeaders = {
     'Content-Type': 'application/json',
 }
 
+const lookupPhoneNumber = (number) => {
+    number = '+' + number
+    const uploadData = {
+        'phone': number
+    }
+    return new Promise((resolve, reject) => {
+        makeRequest(uploadData, 'POST', '/api/sms/validate').then(response => {
+            console.log('yes valid number', response)
+            if (response.status === 201) {
+                return resolve(response)
+            }
+            else {
+                return reject('Invalid phone number')
+            }
+            
+        }).catch(error => {
+            return reject('Invalid phone number')
+        })  
+    })
+}
+
 const makeRequest = (uploadData = {}, method, path, headers = DefaultHeaders) => {
-    if (method == 'GET') {
+    if (method === 'GET') {
         return fetch(path, {
             method: method,
             headers: headers,
@@ -186,4 +207,5 @@ export {
     searchVolunteers,
     emailVolunteers,
     smsVolunteers,
+    lookupPhoneNumber,
 }

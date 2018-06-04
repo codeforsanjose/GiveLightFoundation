@@ -70,6 +70,16 @@ app.post('/api/users/search', (req, res) => {
     }
 });
 
+app.post('/api/sms/validate', (req, res) => {
+    sms.isValidPhoneNumber(req.body.phone).then(response => {
+        console.log('yes')
+        res.status(201).json({ 'isValidPhoneNumber':true })
+    }).catch(error => {
+        console.log(error)
+        res.status(401).json({ 'isValidPhoneNumber':false })
+    })
+})
+
 app.post('/api/admin/groupNotification', (req, res) => {
     if (auth.isAdmin(req)) {
         var reqBody = _.pick(req.body, [

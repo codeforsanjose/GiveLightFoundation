@@ -8,6 +8,7 @@ import VolunteerSkillsInputComponent from '../commonComponents/SkillsInputCompon
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector-material-ui'
 
 import { interests } from '../../models/interests'
+import { lookupPhoneNumber } from '../../api/api'
 
 require('../sharedCss.css')
 require('./ProfileFormComponent.css')
@@ -41,7 +42,7 @@ class ProfileFormComponent extends React.Component {
             errors: {
                 name: '',
                 email: '',
-                number: '',
+                phone: '',
                 passphrase: '',
                 retypePassphrase: '',
                 country: '',
@@ -116,9 +117,6 @@ class ProfileFormComponent extends React.Component {
         if (!isValidEmail(this.state.email)) {
             errors.email = 'Please enter a valid email.'
         }
-        if (this.state.phone.length < 10) {
-            errors.number = 'Please enter a valid phone number with country code.'
-        }
         if (!this.state.country) {
             errors.country = 'Please select a country.'
         }
@@ -131,6 +129,10 @@ class ProfileFormComponent extends React.Component {
         if (this.props.formType !== 'edit' && !this.state.passphrase && !this.state.retypePassphrase && this.state.passphrase !== this.state.retypePassphrase) {
             errors.passphrase += 'Passphrases do not match.'
             errors.retypePassphrase = 'Passphrases do not match.'
+        }
+        // always havephone check last
+        if (this.state.phone.length < 10) {
+            errors.phone = 'Please enter a valid phone number with country code.'
         }
         return errors
     }
@@ -147,18 +149,35 @@ class ProfileFormComponent extends React.Component {
     handleSubmit(e) {
         e.preventDefault()
         let errors = this.validateState()
+        var user = this.state
         if (Object.keys(errors).length === 0) {
-            var user = this.state
             delete user.errors
             delete user.checkboxInterests
             delete user.skillsInput
-            this.props.submitHandle(user)
+            lookupPhoneNumber(user.phone).then(response => {
+                this.props.submitHandle(user)
+            }).catch(error => {
+                errors.phone += 'Invalid phone number'
+                console.log(error)
+                this.setState({
+                    ...this.state,
+                    errors: errors
+                })
+            })
         }
         else {
-            this.setState({
-                ...this.state,
-                errors: errors
+            lookupPhoneNumber(user.phone).then(response => {
+                console.log('yes valid phone nuber')
+                console.log(response)
+            }).catch(error => {
+                errors.phone += 'Invalid phone number'
+                console.log(errors)
+                this.setState({
+                    ...this.state,
+                    errors: errors
+                })
             })
+            
         }
     }
 
@@ -173,7 +192,7 @@ class ProfileFormComponent extends React.Component {
                         <TextField type="text" name="email" value={this.state.email} floatingLabelText="Email" errorText={this.state.errors.email} onChange={(e) => this.handleField('email', e)} />
                     </div>
                     <div>
-                        <TextField type="number" floatingLabelText="Phone 15558971234" name="phone" value={this.state.phone} errorText={this.state.errors.number} onChange={(e) => this.handleField('phone', e)} />
+                        <TextField type="number" floatingLabelText="Phone 15558971234" name="phone" value={this.state.phone} errorText={this.state.errors.phone} onChange={(e) => this.handleField('phone', e)} />
                     </div>
                     
                     {this.props.formType === 'signup' ? this.displayPassphraseFields(): null}
@@ -187,7 +206,7 @@ class ProfileFormComponent extends React.Component {
                         />
                     </div>
                     <div className="countryRegionContainer">
-                        {this.state.errors.region ? <div className="errorMsg">{this.state.errors.country}</div>: ''}
+                        {this.state.errors.region ? <div className="errorMsg">{this.state.errors.region}</div>: ''}
                         <RegionDropdown
                             country={this.state.country}
                             value={this.state.region}

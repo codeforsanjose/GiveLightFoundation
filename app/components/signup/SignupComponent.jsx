@@ -31,7 +31,6 @@ class SignupComponent extends React.Component {
 
     createUser = (user) => {
         delete user.checkboxInterests
-        console.log("register this user", user)
         registerUser(user)
     }
 
